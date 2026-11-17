@@ -4,7 +4,7 @@ services:
     container_name: ai-career-copilot-db
     environment:
       POSTGRES_DB: career_copilot
-      POSTGRES_USER: postgres
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-postgres}
     ports:
       - "5432:5432"
