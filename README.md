@@ -4,6 +4,9 @@
 
 AI Career Copilot helps students, graduates, and job seekers discover relevant employment opportunities and understand how their skills align with job requirements. It combines full-stack web development with AI-assisted job analysis.
 
+**Repository:** https://github.com/Mustafeez24/ai-career-copilot  
+**Live demo:** https://jobradar-ai-gold.vercel.app (the current Vercel deployment still uses the previous project URL; it will be updated after the Vercel project is renamed).
+
 ## Project Objectives
 
 - Provide a user-friendly career guidance interface.
@@ -78,6 +81,13 @@ docker-compose.yml    PostgreSQL + Spring Boot local environment
 ```
 
 ## Run Locally
+
+Clone the updated repository:
+
+```bash
+git clone https://github.com/Mustafeez24/ai-career-copilot.git
+cd ai-career-copilot
+```
 
 ### 1. Start PostgreSQL and Spring Boot
 
