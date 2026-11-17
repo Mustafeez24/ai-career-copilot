@@ -1,6 +1,6 @@
 # AI Career Copilot – Spring Boot Backend
 
-This backend implements the architecture described in the BCA internship report.
+This backend implements the Java, Spring Boot, PostgreSQL, REST API and JWT parts of the BCA internship report's architecture.
 
 ## Stack
 
@@ -17,8 +17,12 @@ This backend implements the architecture described in the BCA internship report.
 
 From the repository root:
 
+1. Copy `.env.example` to `.env`.
+2. Add your SerpApi and NVIDIA API keys.
+3. Change the local database password if required.
+4. Run:
+
 ```bash
-# Set the integration keys in your shell or .env file first.
 docker compose up --build
 ```
 
@@ -26,7 +30,7 @@ The API runs at http://localhost:8080. PostgreSQL runs on port 5432.
 
 ## Run without Docker
 
-Create a PostgreSQL database named `career_copilot`, then configure these environment variables:
+Create a PostgreSQL database named `career_copilot`, then configure:
 
 - `SPRING_DATASOURCE_URL`
 - `SPRING_DATASOURCE_USERNAME`
@@ -81,9 +85,16 @@ Content-Type: application/json
 
 Send the returned token as `Authorization: Bearer <token>` to access protected endpoints.
 
+## Frontend Connection
+
+Set `SPRING_BOOT_API_URL=http://localhost:8080` in the Next.js `.env.local` file. The existing `/api/jobs` and `/api/analyze` routes will forward requests to this backend. The auth and profile proxy routes are also available under `/api/auth` and `/api/profile/me`.
+
+When `SPRING_BOOT_API_URL` is not set, job search and AI analysis continue using the original Next.js integrations. This keeps the current Vercel deployment usable until the Spring Boot service is deployed.
+
 ## Notes
 
 - Hibernate creates/updates the `app_users` table from the JPA entity.
 - Keep API keys and JWT secrets out of source control.
-- The current Next.js API routes can proxy to this backend when `SPRING_BOOT_API_URL` is set. Without it, the original Next.js integration remains available for the existing Vercel deployment.
-- Run `mvn test` or `mvn package` before deploying to validate the backend in your local Java environment.
+- The default database credentials in Docker Compose are for local development only.
+- Set a unique strong `JWT_SECRET` before deploying outside local development.
+- Run `mvn test` and `mvn package` before using this backend in production.
