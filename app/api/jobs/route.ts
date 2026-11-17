@@ -93,6 +93,24 @@ function formatJob(job: SerpApiJob) {
 }
 
 export async function GET(request: NextRequest) {
+  // When the Spring Boot API is configured, forward requests to it.
+  // The existing Next.js integration remains as a local/Vercel fallback.
+  const springBootApiUrl = process.env.SPRING_BOOT_API_URL;
+  if (springBootApiUrl) {
+    try {
+      const targetUrl = new URL("/api/jobs", springBootApiUrl);
+      targetUrl.search = new URL(request.url).search;
+      const backendResponse = await fetch(targetUrl, { cache: "no-store" });
+      const payload = await backendResponse.json();
+      return NextResponse.json(payload, { status: backendResponse.status });
+    } catch (error) {
+      console.error("Spring Boot job search request failed:", error);
+      return NextResponse.json(
+        { error: "Unable to reach the Spring Boot API. Check SPRING_BOOT_API_URL." },
+        { status: 502 }
+      );
+    }
+  }
   if (!SERPAPI_KEY) {
     return NextResponse.json(
       { error: "SerpApi key not configured" },

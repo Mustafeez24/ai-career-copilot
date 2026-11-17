@@ -1,109 +1,180 @@
 # AI Career Copilot
 
-> An AI-powered career guidance and job recommendation system.
+> **AI-Powered Career Guidance and Job Recommendation System**
 
-AI Career Copilot helps students, graduates, and job seekers explore relevant employment opportunities and understand how their skills align with job requirements. It combines job discovery with AI-assisted analysis to provide actionable career insights.
+AI Career Copilot helps students, graduates, and job seekers discover relevant employment opportunities and understand how their skills align with job requirements. It combines full-stack web development with AI-assisted job analysis.
 
-## Project Overview
+## Project Objectives
 
-Job seekers often spend time searching across multiple platforms, comparing job descriptions, identifying missing skills, and preparing for interviews. AI Career Copilot brings job discovery and career assistance into one workflow.
+- Provide a user-friendly career guidance interface.
+- Help users explore job opportunities relevant to their skills and interests.
+- Compare candidate skills with job requirements.
+- Identify matching skills and skill gaps.
+- Support career preparation through interview questions and action plans.
+- Demonstrate frontend, backend, database, API, and authentication concepts.
 
-## Current Features
+## Features
 
 - Search live job listings using SerpApi Google Jobs.
-- Enter a target role, location, experience level, and skills.
-- Analyse a selected job with NVIDIA Nemotron.
+- Enter role, location, experience, and skills.
+- Analyse a selected job using NVIDIA Nemotron.
 - Generate a match score and recommendation.
-- Identify matching skills and skill gaps.
+- Identify matching skills and missing skills.
 - Generate interview questions and a preparation plan.
-- Responsive user interface with loading and error states.
+- Register and log in using JWT authentication through the Spring Boot API.
+- Store user account information in PostgreSQL.
+- Responsive user interface.
 
-## Current Implementation Architecture
+## Technology Stack
 
-The repository currently implements the following architecture:
+| Layer | Technology | Purpose |
+|---|---|---|
+| Frontend | React.js, Next.js, TypeScript | User interface |
+| Backend | Java 21, Spring Boot | Application logic and REST APIs |
+| Database | PostgreSQL | Store user account information |
+| API communication | REST APIs | Connect frontend and backend |
+| Authentication | Spring Security, JWT | User registration, login, and protected profile |
+| Job data | SerpApi Google Jobs | Retrieve job listings |
+| AI analysis | NVIDIA Nemotron | Job matching and career assistance |
+| Styling | Tailwind CSS | Responsive interface |
+
+## System Architecture
+
+When the Spring Boot backend is configured, the application follows this flow:
 
 ```text
-React / Next.js Frontend
-        |
-        +---- /api/jobs ----> SerpApi Google Jobs
-        |
-        +---- /api/analyze -> NVIDIA Nemotron
+User
+ |
+ v
+React.js / Next.js Frontend
+ |
+ | REST API requests
+ v
+Java + Spring Boot Backend
+ |             |
+ |             +---- JWT Authentication
+ |
+ +---- PostgreSQL Database
+ |
+ +---- SerpApi Google Jobs
+ |
+ +---- NVIDIA Nemotron AI
+ |
+ v
+Job Results and Career Guidance
 ```
 
-## Technology Stack (Actual Repository)
+The Next.js API routes proxy job-search and AI-analysis requests to Spring Boot when `SPRING_BOOT_API_URL` is configured. Without that setting, the existing Next.js API integrations remain available as a fallback for the current Vercel deployment.
 
-| Layer | Technology | Responsibility |
-|---|---|---|
-| Frontend | React 19, Next.js 16, TypeScript | User interface and interactions |
-| Styling | Tailwind CSS 4 | Responsive UI |
-| Animation | Motion | Interface animations |
-| Job discovery | SerpApi Google Jobs API | Retrieves job listings |
-| AI analysis | NVIDIA Nemotron API | Job-fit analysis and career guidance |
-| Runtime | Node.js | Application runtime |
+## Repository Structure
 
-> **Architecture note:** The accompanying BCA internship report describes a proposed full-stack architecture using React.js, Java, Spring Boot, PostgreSQL, REST APIs, and JWT authentication. This repository's current implementation uses Next.js API routes, SerpApi, and NVIDIA Nemotron. Java/Spring Boot, PostgreSQL, and JWT should be described as planned or studied components unless and until they are implemented and verified in this codebase.
-
-## How It Works
-
-1. The user enters a job role, location, experience, and skills.
-2. The application searches Google Jobs through SerpApi.
-3. The user selects a job for analysis.
-4. The server sends the profile and job information to NVIDIA Nemotron.
-5. The application displays the match score, recommendation, matching skills, missing skills, interview questions, and preparation plan.
+```text
+app/                  Next.js / React frontend and API proxy routes
+backend/              Java Spring Boot REST API
+  src/main/java/      Controllers, services, entities, security
+  src/main/resources/ application configuration
+docker-compose.yml    PostgreSQL + Spring Boot local environment
+.env.example          Environment variable template
+```
 
 ## Run Locally
 
-Requirements: Node.js and npm.
+### 1. Start PostgreSQL and Spring Boot
+
+Requirements: Docker Desktop.
+
+Copy the environment template:
 
 ```bash
-git clone https://github.com/Mustafeez24/jobradar-ai.git
-cd jobradar-ai
-npm install
+# Windows PowerShell
+Copy-Item .env.example .env
 ```
 
-Create `.env.local` in the project root:
+Add your SerpApi and NVIDIA API keys to `.env`, then run:
+
+```bash
+docker compose up --build
+```
+
+The backend will be available at http://localhost:8080.
+
+### 2. Start the React / Next.js frontend
+
+In a second terminal:
+
+```bash
+npm install
+npm run dev
+```
+
+Create a local `.env.local` file containing:
 
 ```env
-SERPAPI_KEY=your_serpapi_key
-NVIDIA_API_KEY=your_nvidia_api_key
-```
-
-Start the development server:
-
-```bash
-npm run dev
+SPRING_BOOT_API_URL=http://localhost:8080
 ```
 
 Open http://localhost:3000.
 
-## Build
+### 3. Build checks
+
+Frontend:
 
 ```bash
 npm run build
 ```
 
-## Security
+Backend (from the `backend` directory):
 
-- Keep API keys in server-side environment variables.
-- Never commit `.env.local`.
-- Do not expose provider keys in browser code.
+```bash
+mvn test
+mvn package
+```
 
-## Academic Context
+## REST API Endpoints
 
-This project is related to the BCA internship topic **AI Career Copilot – An AI-Powered Career Guidance and Job Recommendation System**. The internship report discusses requirement analysis, system design, frontend and backend concepts, database management, API integration, authentication, testing, and future enhancements.
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/auth/register` | Register a user |
+| POST | `/api/auth/login` | Log in and receive a JWT |
+| GET/PUT | `/api/profile/me` | Read or update the authenticated career profile |
+| GET | `/api/jobs?q=Software%20Engineer` | Search jobs |
+| POST | `/api/analyze` | Analyse a candidate and job |
+| GET | `/actuator/health` | Check backend availability |
+
+The Next.js frontend also exposes proxy routes under `/api/auth` and `/api/profile/me` when the Spring Boot backend URL is configured.
+
+## Environment Variables
+
+Backend / Docker:
+
+- `SERPAPI_KEY`
+- `NVIDIA_API_KEY`
+- `JWT_SECRET` — use a unique Base64-encoded secret outside local development.
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `FRONTEND_ORIGIN`
+
+Next.js frontend:
+
+- `SPRING_BOOT_API_URL` — optional; when set, job search and AI analysis are sent to the Spring Boot API.
+
+Never commit `.env` or `.env.local` files or expose API keys in browser code.
+
+## Academic Project Context
+
+The project is titled **AI Career Copilot – An AI-Powered Career Guidance and Job Recommendation System**. The BCA internship report describes React.js, Java, Spring Boot, PostgreSQL, REST APIs, and JWT authentication. This repository includes a Spring Boot backend foundation for those components, alongside the existing Next.js job search and AI analysis functionality.
 
 ## Future Scope
 
-Potential future enhancements described for the project include:
-
-- User profile management and persistence.
-- Resume analysis and skill assessment.
-- Advanced personalised job recommendations.
-- Skill-gap analysis and learning recommendations.
-- Interview preparation assistance.
-- A dedicated Java/Spring Boot backend, PostgreSQL persistence, and JWT authentication, if implemented in a later development phase.
+- Resume analysis and advanced skill assessment.
+- Personalised learning recommendations.
+- Saved jobs and application tracking.
+- More job sources and career resources.
+- Further automated testing and production deployment.
 
 ---
 
-**Project:** AI Career Copilot  
-**Repository:** Mustafeez24/jobradar-ai
+**Internship Organisation:** YouByte Labs  
+**Internship Role:** Full Stack Developer Intern  
+**Project:** AI Career Copilot

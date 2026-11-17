@@ -196,6 +196,29 @@ function parseAnalysisResponse(text: string): AnalysisResult {
 }
 
 export async function POST(request: NextRequest) {
+  // Prefer the Spring Boot REST API when configured.
+  // Keep the current Next.js/Nemotron handler as a fallback.
+  const springBootApiUrl = process.env.SPRING_BOOT_API_URL;
+  if (springBootApiUrl) {
+    try {
+      const body = await request.json();
+      const backendResponse = await fetch(new URL("/api/analyze", springBootApiUrl), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        cache: "no-store",
+      });
+      const payload = await backendResponse.json();
+      return NextResponse.json(payload, { status: backendResponse.status });
+    } catch (error) {
+      console.error("Spring Boot analysis request failed:", error);
+      return NextResponse.json(
+        { error: "Unable to reach the Spring Boot API. Check SPRING_BOOT_API_URL." },
+        { status: 502 }
+      );
+    }
+  }
+
   const apiKey = process.env.NVIDIA_API_KEY;
   
   if (!apiKey) {
