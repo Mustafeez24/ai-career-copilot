@@ -136,7 +136,7 @@ mvn package
 |---|---|---|
 | POST | `/api/auth/register` | Register a user |
 | POST | `/api/auth/login` | Log in and receive a JWT |
-| GET | `/api/profile/me` | Read the authenticated user profile |
+| GET/PUT | `/api/profile/me` | Read or update the authenticated career profile |
 | GET | `/api/jobs?q=Software%20Engineer` | Search jobs |
 | POST | `/api/analyze` | Analyse a candidate and job |
 | GET | `/actuator/health` | Check backend availability |
