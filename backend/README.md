@@ -51,7 +51,8 @@ mvn spring-boot:run
 |---|---|---|---|
 | POST | `/api/auth/register` | Create an account | Public |
 | POST | `/api/auth/login` | Login and receive a JWT | Public |
-| GET | `/api/profile/me` | Get current signed-in user | JWT required |
+| GET | `/api/profile/me` | Get current user and career profile | JWT required |
+| PUT | `/api/profile/me` | Save target role, experience, and skills | JWT required |
 | GET | `/api/jobs?q=...` | Search jobs using SerpApi | Public |
 | POST | `/api/analyze` | Analyse candidate/job fit with Nemotron | Public |
 | GET | `/actuator/health` | Health check | Public |
@@ -93,7 +94,8 @@ When `SPRING_BOOT_API_URL` is not set, job search and AI analysis continue using
 
 ## Notes
 
-- Hibernate creates/updates the `app_users` table from the JPA entity.
+- Hibernate creates/updates the `app_users` and `career_profiles` tables from the JPA entities.
+- Career profiles store the signed-in user's target role, experience level, and skills.
 - Keep API keys and JWT secrets out of source control.
 - The default database credentials in Docker Compose are for local development only.
 - Set a unique strong `JWT_SECRET` before deploying outside local development.
