@@ -941,8 +941,8 @@ export default function Home() {
               </svg>
             </motion.div>
             <div>
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">JobRadar AI</h1>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Find the right developer jobs. Know why you match.</p>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">AI Career Copilot</h1>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">AI-powered career guidance and job recommendations.</p>
             </div>
           </div>
           <motion.span
@@ -969,10 +969,10 @@ export default function Home() {
           className="text-center mb-10"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-zinc-900 dark:text-white mb-4 tracking-tight">
-            Find jobs that actually fit you.
+            Find career opportunities that fit you.
           </h2>
           <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Search live Google Jobs and get AI-powered match analysis, skill gaps, and interview prep — all in one place.
+            Discover relevant jobs, analyse your skills against job requirements, and get personalised career guidance — all in one place.
           </p>
         </motion.section>
 
@@ -1152,13 +1152,13 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-center sm:text-left">
             <div className="flex items-center gap-2 justify-center sm:justify-start">
               <span className="w-2 h-2 rounded-full bg-purple-500" />
-              <span className="font-semibold text-zinc-900 dark:text-white">JobRadar AI</span>
+              <span className="font-semibold text-zinc-900 dark:text-white">AI Career Copilot</span>
             </div>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Built for SerpApi India Hackathon 2026
+              AI-Powered Career Guidance and Job Recommendation System
             </p>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Powered by SerpApi Google Jobs + NVIDIA Nemotron
+              Job discovery via SerpApi · AI analysis via NVIDIA Nemotron
             </p>
           </div>
         </div>
